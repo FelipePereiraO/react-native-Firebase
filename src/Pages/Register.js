@@ -1,19 +1,23 @@
 import React, {useState} from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import { auth } from '../services/Firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+
+import LottieView from  "lottie-react-native";
+
 
 export function Register({navigation}){
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
+    const [success, setSuccess] =  useState(true);
 
-    async function SignIn(){
-        setLoading(true)
+
+    async function SignUp(){
         await createUserWithEmailAndPassword(auth, email, password)
         .then(value => {
-            alert("Cadastrado")
-            setLoading(false)
+            setLoading(true)
         }).catch(error => 
             { alert(error)
         })
@@ -27,8 +31,17 @@ export function Register({navigation}){
                     <View>
                         <View style={styles.login}>
                         <Text style={styles.title}>Welcome</Text>
+                        
+                            <LottieView
+                                source={require("../../assets/success.json")}
+                                autoPlay
+                                loop={false}
+                                style={{height: 200}}
+                            />
+                       
                         <View style={styles.inputs}>
-                            <Text>Welcome to System</Text>      
+
+                            <Text>Welcome to System!</Text>      
               
                         </View>
                         <View style={{ marginVertical: 25}}>
@@ -48,7 +61,7 @@ export function Register({navigation}){
                             <TextInput style={styles.backgorundInput} placeholder='*******' id='password' value={password}  onChangeText={value => setPassword(value)}/>                        
                         </View>
                         <View style={{ marginVertical: 25}}>
-                            <TouchableOpacity style={styles.button} onPress={() => createUser()}>
+                            <TouchableOpacity style={styles.button} onPress={() => SignUp()}>
                                 <Text style={{fontWeight: 'bold', color: 'white'}}>Register</Text>
                             </TouchableOpacity>          
                         </View>
