@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../services/Firebase';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 
@@ -11,15 +12,17 @@ export default function Login({navigation}){
     const [loading, setLoading] = useState(false)
 
     async function SignIn(){
-        setLoading(true)
-        await createUserWithEmailAndPassword(auth, email, password)
+        console.log("entrou")
+        await signInWithEmailAndPassword(auth, email, password)
         .then(value => {
-            alert("Cadastrado")
-            setLoading(false)
-        }).catch(error => 
-            { alert(error)
+            console.log("entrou")
+            navigation.navigate("Home", {auth: value})
+        }).catch(error => {
+             alert(error)
+             console.log(error)
         })
     }
+
 
 
     return(
@@ -28,14 +31,25 @@ export default function Login({navigation}){
                 <Text style={styles.logo}>System</Text>
             </View>
             <View style={styles.login}>
-                <Text style={{fontSize: 19, margin: 22}}>Login</Text>
+                {/* <Text style={{fontSize: 19, margin: 22}}>Login</Text> */}
                 <View style={styles.inputs}>
-                    <Text>E-mail</Text>
-                    <TextInput style={styles.backgorundInput} placeholder='email@dominio.com' id='email' value={email} onChangeText={value => setEmail(value)}/>                        
-                    <Text>Password</Text>
-                    <TextInput style={styles.backgorundInput} placeholder='*******' id='password' value={password}  onChangeText={value => setPassword(value)}/>                        
+                    <View style={{margin: 12}}>
+                        <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>E-mail</Text>
+                        <View style={styles.backgorundInput}>
+                            <Ionicons name="person" size={20} color='#bdc3c7'/>
+                            <TextInput style={{marginHorizontal: 8, width: '100%', height: 50}} placeholder='email@dominio.com' id='email' value={email} onChangeText={value => setEmail(value)}/>                              
+                        </View>
+                                                               
+
+                        <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Password</Text>
+                        <View style={styles.backgorundInput}>
+                            <Ionicons name="key" size={20} color='#bdc3c7'/>
+                            <TextInput style={{marginHorizontal: 8, width: '100%', height: 50}} placeholder='*******' secureTextEntry={true} id='password' value={password}  onChangeText={value => setPassword(value)}/>   
+                        </View>
+                                             
+                    </View>
                 </View>
-                <View style={{marginHorizontal: '10%', marginTop: 22}}>
+                <View style={{marginHorizontal: '10%', marginTop: 16}}>
                     <TouchableOpacity style={styles.button} onPress={() => SignIn()}>
                         <Text style={{fontWeight: 'bold', color: 'white'}}>Sign in</Text>
                     </TouchableOpacity>
@@ -65,8 +79,11 @@ const styles = StyleSheet.create({
 
     },
     backgorundInput:{
-        borderColor: 'black',
-        backgroundColor: '#dfe6e9',
+        borderColor: '#dcdde1',
+        borderWidth: 1,
+        backgroundColor: '#f5f6fa',
+        flexDirection: 'row',
+        alignItems: 'center',
         borderRadius: 8,
         height: 50,
         width: 300,

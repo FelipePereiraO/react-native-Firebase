@@ -1,0 +1,10 @@
+{
+    "clientes":[
+        {
+            "id": 1,
+            "nome": "Felipe Pereira",
+            "endereço": "Rua Cardeal",
+            "telefone": "71 99999-9999"
+        }
+    ]
+}

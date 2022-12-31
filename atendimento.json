@@ -1,0 +1,43 @@
+{
+    "atendimento":[
+        {
+            "id": 1,
+            "id_cliente": 1,
+            "data": "26/12/2022",
+            "hora": "15:00",
+            "servico": "Entrega",
+            "atendimento": 0
+        },
+        {
+            "id": 2,
+            "id_cliente": 2,
+            "data": "27/12/2022",
+            "hora": "18:00",
+            "servico": "Conserto",
+            "atendimento": 1
+        }
+    ],
+
+    "clientes":[
+        {
+            "id": 1,
+            "nome": "Felipe Pereira",
+            "endereco": "Rua Cardeal",
+            "telefone": "71 99999-9999"
+        },
+        {
+            "id": 2,
+            "nome": "Fulano Test",
+            "endereco": "Paripe, Rua Teste",
+            "telefone": "71 99999-9999"
+        }
+    ],
+
+    "venda":[
+        {
+            "id": 1,
+            "id_produto": 1
+            
+        }
+    ]
+}
