@@ -26,11 +26,21 @@ export function Home({navigation, route}){
                 
             </View>
             <View style={{margin: 10, flexDirection: 'row', justifyContent: 'center'}}>
+                <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Venda")}>
+                    <Ionicons name="list" size={32} color="black"/>
+                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Lista de Vendas</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button_list}>
+                    <Ionicons name="person-add-sharp" size={32} color="black"/>
+                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Nova Venda</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={{margin: 10, flexDirection: 'row', justifyContent: 'center'}}>
                 <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Atendimento")}>
                     <Ionicons name="list" size={32} color="black"/>
                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Lista de atendimento</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button_list}>
+                <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Novo Atendimento")}>
                     <Ionicons name="create" size={32} color="black"/>
                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Adicionar novo atendimento</Text>
                 </TouchableOpacity>
@@ -45,6 +55,7 @@ export function Home({navigation, route}){
                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Adicionar novo cliente </Text>
                 </TouchableOpacity>
             </View>
+
             {/* <TouchableOpacity style={styles.button} onPress={() => Logout()}>
                         <Text style={{fontWeight: 'bold', color: 'white'}}>Logout</Text>
             </TouchableOpacity> */}

@@ -147,7 +147,7 @@ export function Dashborad({navigation}){
                             />                        
                         )
                     }
-                    <Text style={{fontSize: 18, fontWeight: 'bold', color: "#6c5ce7", marginTop: 20}}>Atendimentos da Semana</Text>
+                    <Text style={{fontSize: 18, fontWeight: 'bold', color: "#6c5ce7", marginTop: 20}}>Atendimentos</Text>
                     <VictoryChart
                     theme={VictoryTheme.material}
                     >

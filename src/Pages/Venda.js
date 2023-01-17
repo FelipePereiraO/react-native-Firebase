@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 
 import {db} from "../services/Firebase"
 import {ref, set, update, onValue, orderByChild, startAt, endAt, startAfter, query, limitToFirst } from "firebase/database"
 import { AttendanceSelect } from "./AttendanceSelect";
-export function Attendance({navigation}){
+export function Venda({navigation}){
     const [client, setClient] = useState([])
     const [atendimento, setAtendimento] = useState([])
     const [data, setData] = useState("")
@@ -15,30 +15,34 @@ export function Attendance({navigation}){
     }, [])
     function readDataAtendimento(){
         setAtendimento([])
-        const startCountRef =query(ref(db, 'atendimento/'))
+        const startCountRef =query(ref(db, 'venda/'))
         onValue(startCountRef, (snap) =>{
             const data = snap.val();
             setAtendimento(data)
+            console.log(data)
             const date = new Date();
             var dataAtual =  date.getDate() +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
             setData(dataAtual)
 
-            var atendimentos = 0
+            var vendas = 0
             
             data.map((a) =>{
                 if(a.data == dataAtual){
-                    atendimentos += 1
+                    vendas += 1
                 }
             })
-            if(atendimentos == 0){
+            if(vendas == 0){
                 setAtendimentosHoje(0)
+            }else{
+                setAtendimentosHoje(vendas)
             }
+            console.log(vendas)
         })
     }
 
     function readDataClient(){
         setClient([])
-        const startCountRef = ref(db, 'clientes/')
+        const startCountRef = ref(db, 'produto/')
         onValue(startCountRef, (snap) =>{
             const data = snap.val();
             setClient(data)
@@ -58,17 +62,20 @@ export function Attendance({navigation}){
                 {
                     atendimentosHoje >= 1 ?
                     atendimento ? atendimento.map((a) =>(
-                        client ? client.map((c) =>(
-                            a.id_cliente == c.id && a.data == data ? (
-                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: c})}>
-                                    <View style={a.atendimento == 1 ? styles.completed : styles.no_complet}></View>
-                                    <View style={{margin: 10}}>
-                                        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{c.nome}</Text> 
-                                        <Text>{c.endereco}</Text>  
-                                    </View> 
+                             a.data == data ? (
+                                <TouchableOpacity style={styles.card} /* onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: c})} */>
+                                    <View style={styles.completed}></View>
+                                    <View style={{margin: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
+                                    <View style={{width: '75%'}}>
+                                        <Text style={{fontSize: 17, fontWeight: 'bold'}}>Venda</Text>
+                                        <Text style={{fontSize: 14, fontWeight: 'bold', color: '#27ae60', marginTop: 10}}>R$ {a.valorTotal}</Text> 
+                                    </View>
+                                    <View>
+                                        <Text>{a.data}</Text> 
+                                    </View>
+                                </View>      
                                 </TouchableOpacity>
                             ): ""
-                        )) : ""
                     )) : "" 
                     : 
                     <View style={{alignItems: 'center', margin: 10}}>
@@ -81,20 +88,21 @@ export function Attendance({navigation}){
                 </View>
                 {
                     atendimento ? atendimento.map((a) =>(
-                        client ? client.map((c) =>(
-                            a.id_cliente == c.id && a.data != data? (
-                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: c})}>
-                                    <View style={a.atendimento == 1 ? styles.completed : styles.no_complet}></View>
-                                    <View style={{margin: 10}}>
-                                        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{c.nome}</Text> 
-                                        <Text>{c.endereco}</Text>
-                                                                                                                
-                                                
+                        a.data != data ? (
+                            <TouchableOpacity style={styles.card} /* onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: c})} */>
+                                <View style={styles.completed}></View>
+                                <View style={{margin: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
+                                    <View style={{width: '75%'}}>
+                                        <Text style={{fontSize: 17, fontWeight: 'bold'}}>Venda</Text>
+                                        <Text style={{fontSize: 14, fontWeight: 'bold', color: '#27ae60', marginTop: 10}}>R$ {a.valorTotal}</Text> 
                                     </View>
-                                    
-                                </TouchableOpacity>
-                            ): "" 
-                        )) : ""
+                                    <View>
+                                        <Text>{a.data}</Text> 
+                                    </View>
+                                </View>        
+                            </TouchableOpacity>
+                        ): ""
+                        
                     )) : ""    
                 }          
             </View>

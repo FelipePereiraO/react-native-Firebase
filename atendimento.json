@@ -36,8 +36,35 @@
     "venda":[
         {
             "id": 1,
-            "id_produto": 1
-            
+            "produtos":[
+                {"id_produto": 1},
+                {"id_produto": 2}
+            ],
+            "data": "09/01/2023",
+            "valorTotal": 12.25
+        },
+        {
+            "id": 2,
+            "produtos":[
+                {"id_produto": 2}
+            ],
+            "data": "08/01/2023",
+            "valorTotal": 2.00
+        }
+    ],
+
+    "produto":[
+        {
+            "id": 1,
+            "nome": "Filtro",
+            "valor": 10.25,
+            "unidade": 5
+        },
+        {
+            "id": 2,
+            "nome": "Soda",
+            "valor": 2.00,
+            "unidade": 20
         }
     ]
 }

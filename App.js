@@ -9,6 +9,8 @@ import { Tab } from './src/Pages/Tab';
 import { Client } from './src/Pages/Client';
 import { Attendance } from './src/Pages/Attendance';
 import { AttendanceSelect } from './src/Pages/AttendanceSelect';
+import { NewAttendance } from './src/Pages/NewAttendance';
+import { Venda } from './src/Pages/Venda';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
@@ -16,11 +18,12 @@ export default function App() {
       <Stack.Navigator>
       <Stack.Screen name="Home" component={Tab} options={{headerShown: false}}/>
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
-        
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Client" component={Client} />
         <Stack.Screen name="Atendimento" component={Attendance} />
         <Stack.Screen name="AtendimentoSelect" component={AttendanceSelect} />
+        <Stack.Screen name="Venda" component={Venda} />
+        <Stack.Screen name="Novo Atendimento" component={NewAttendance} />
       </Stack.Navigator>
     </NavigationContainer>
   );
