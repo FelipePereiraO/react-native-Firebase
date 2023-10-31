@@ -7,7 +7,7 @@ export function Attendance({navigation}){
     const [client, setClient] = useState([])
     const [atendimento, setAtendimento] = useState([])
     const [data, setData] = useState("")
-    const [atendimentosHoje, setAtendimentosHoje] = useState(1)
+    const [atendimentosHoje, setAtendimentosHoje] = useState(0)
 
     useEffect(() =>{
         readDataAtendimento()
@@ -18,71 +18,72 @@ export function Attendance({navigation}){
         const startCountRef = ref(db, 'atendimentos/0')
         get(startCountRef).then((snap) =>{
             const data = snap.val();
-            const novoArray = Object.keys(data).map((chave) => {
-                const arrayDeObjetos = data[chave];              
-                return arrayDeObjetos.map((objeto) => {
-                    if(objeto.hasOwnProperty("atendimento")){
-                        return {
-                            atendimento: Object.values(objeto.atendimento).map((atendimento) => {
+            console.log(data)
+            if(data != null){
+                const novoArray = Object.keys(data).map((chave) => {
+                    const arrayDeObjetos = data[chave];              
+                    return arrayDeObjetos.map((objeto) => {
+                        if(objeto.hasOwnProperty("atendimento")){
+                            return {
+                                atendimento: Object.values(objeto.atendimento).map((atendimento) => {
+                                    
+                                        const chavesAtendimento = Object.keys(atendimento);
+                                        //console.log(atendimento)
+                                        return Object.entries(atendimento).map(([index, atendimentoData]) => {
+                                            return {
+                                            id: chave,
+                                            idAtendimento: index,
+                                            data: atendimentoData.data,
+                                            hora: atendimentoData.hora,
+                                            servico: atendimentoData.servico,
+                                            status: atendimentoData.status,
+                                            nome: objeto.nome,
+                                            endereco: objeto.endereco,
+                                            };
+                                        });
                                 
-                                    const chavesAtendimento = Object.keys(atendimento);
-                                    //console.log(atendimento)
-                                    return Object.entries(atendimento).map(([index, atendimentoData]) => {
-                                        return {
-                                        id: chave,
-                                        idAtendimento: index,
-                                        data: atendimentoData.data,
-                                        hora: atendimentoData.hora,
-                                        servico: atendimentoData.servico,
-                                        status: atendimentoData.status,
-                                        nome: objeto.nome,
-                                        endereco: objeto.endereco,
-                                        };
-                                    });
-                            
-                            }).flat(),
-                        };
+                                }).flat(),
+                            };
+                        }
+                    });
+                    }).flat();
+                    const novoObjeto = { atendimento: [] };
+
+                    novoArray.forEach((item) => {
+                        if(item != undefined){
+                            novoObjeto.atendimento.push(...item.atendimento);
+
+                        }
+                    });
+
+                //console.log(novoObjeto)
+                
+                
+                    setAtendimento(novoObjeto.atendimento)
+                    const date = new Date();
+                    var dataAtual =  date.getDate() +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
+                    setData(dataAtual)
+
+                    var atendimentos = 0
+                    novoObjeto.atendimento.map((a) =>{
+                        if(a.data == dataAtual){
+                            atendimentos += 1
+                        }
+                    })
+                    if(atendimentos == 0){
+                        setAtendimentosHoje(0)
                     }
-                });
-              }).flat();
-              const novoObjeto = { atendimento: [] };
-
-              novoArray.forEach((item) => {
-                console.log(item)
-                if(item != undefined){
-                    novoObjeto.atendimento.push(...item.atendimento);
-
-                }
-              });
-
-              //console.log(novoObjeto)
-            
-            
-            setAtendimento(novoObjeto.atendimento)
-            const date = new Date();
-            var dataAtual =  date.getDate() +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
-            setData(dataAtual)
-
-            var atendimentos = 0
-            novoObjeto.atendimento.map((a) =>{
-                if(a.data == dataAtual){
-                    atendimentos += 1
-                }
-            })
-            if(atendimentos == 0){
-                setAtendimentosHoje(0)
             }
         })
         //off(startCountRef)
+       
     }
 
     function readDataClient(){
         setClient([])
         const startCountRef = ref(db, 'clientes/')
         onValue(startCountRef, (snap) =>{
-            const data = snap.val();
-            console.log(data)
-            
+            const data = snap.val();            
             setClient(data)
 
         })

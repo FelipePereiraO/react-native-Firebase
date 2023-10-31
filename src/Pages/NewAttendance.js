@@ -127,7 +127,7 @@ export function NewAttendance({navigation}){
 
     function Etapas(){
         if(nome != "" && telefone != "" && bairro != "" && rua != "" && number != "" || isEnabled){
-            if(selectedItem){
+            if(selectedItem || !isEnabled){
                 if(cliente == true){
                     setCalendarComplet(true)
                     setCalendar(true)
