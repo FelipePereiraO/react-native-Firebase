@@ -11,12 +11,13 @@ import { Attendance } from './src/Pages/Attendance';
 import { AttendanceSelect } from './src/Pages/AttendanceSelect';
 import { NewAttendance } from './src/Pages/NewAttendance';
 import { Venda } from './src/Pages/Venda';
+import { NewVenda } from './src/Pages/NewVenda';
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator>
-      <Stack.Screen name="Home" component={Tab} options={{headerShown: false}}/>
+      <Stack.Screen name="Home" component={Tab} options={{headerShown: false,}}/>
         <Stack.Screen name="Login" component={Login} options={{headerShown: false}} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Client" component={Client} />
@@ -24,6 +25,8 @@ export default function App() {
         <Stack.Screen name="AtendimentoSelect" component={AttendanceSelect} />
         <Stack.Screen name="Venda" component={Venda} />
         <Stack.Screen name="Novo Atendimento" component={NewAttendance} />
+        <Stack.Screen name="Nova Venda" component={NewVenda} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

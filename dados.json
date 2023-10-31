@@ -1,0 +1,62 @@
+{
+    "atendimentos":[
+        {
+            "2134324234":[
+                {
+                    "nome": "Felipe",
+                    "endereco": "Rua teste",
+                    "telefone": "71 991718773",
+                    "atendimento":[
+                        {
+                            "2321321":{
+                                "data": "13/10/2023",
+                                "hora": "15:00",
+                                "servico": "Entrega",
+                                "status": 1
+                            },
+                            "23213216":{
+                                "data": "11/10/2023",
+                                "hora": "15:00",
+                                "servico": "Entrega",
+                                "status": 1
+                            }
+                        }
+                    ]
+                }
+            ],
+            "2134324523424":[
+                {
+                    "nome": "Teste",
+                    "endereco": "Rua Paripe",
+                    "telefone": "71 991718213",
+                    "atendimento": [
+                        {
+                            "23213211":{
+                                "data": "10/10/2023",
+                                "hora": "15:00",
+                                "servico": "Concerto",
+                                "status": 2
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "status":[
+    {
+        "id": 0,
+        "nome": "Pendente"
+    },
+    {
+        "id": 1,
+        "nome": "Concluido"
+    },
+    {
+        "id": 2,
+        "nome": "Cancelado"
+    }
+    ]
+
+
+}

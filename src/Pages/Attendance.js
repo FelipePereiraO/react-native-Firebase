@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import {db} from "../services/Firebase"
-import {ref, set, update, onValue, orderByChild, startAt, endAt, startAfter, query, limitToFirst } from "firebase/database"
+import {ref, set, update, onValue, orderByChild, startAt, endAt, startAfter, query, limitToFirst, off, get, child } from "firebase/database"
 import { AttendanceSelect } from "./AttendanceSelect";
 export function Attendance({navigation}){
     const [client, setClient] = useState([])
@@ -13,19 +13,58 @@ export function Attendance({navigation}){
         readDataAtendimento()
         readDataClient()
     }, [])
-    function readDataAtendimento(){
+    async function readDataAtendimento(){
         setAtendimento([])
-        const startCountRef =query(ref(db, 'atendimento/'))
-        onValue(startCountRef, (snap) =>{
+        const startCountRef = ref(db, 'atendimentos/0')
+        get(startCountRef).then((snap) =>{
             const data = snap.val();
-            setAtendimento(data)
+            const novoArray = Object.keys(data).map((chave) => {
+                const arrayDeObjetos = data[chave];              
+                return arrayDeObjetos.map((objeto) => {
+                    if(objeto.hasOwnProperty("atendimento")){
+                        return {
+                            atendimento: Object.values(objeto.atendimento).map((atendimento) => {
+                                
+                                    const chavesAtendimento = Object.keys(atendimento);
+                                    //console.log(atendimento)
+                                    return Object.entries(atendimento).map(([index, atendimentoData]) => {
+                                        return {
+                                        id: chave,
+                                        idAtendimento: index,
+                                        data: atendimentoData.data,
+                                        hora: atendimentoData.hora,
+                                        servico: atendimentoData.servico,
+                                        status: atendimentoData.status,
+                                        nome: objeto.nome,
+                                        endereco: objeto.endereco,
+                                        };
+                                    });
+                            
+                            }).flat(),
+                        };
+                    }
+                });
+              }).flat();
+              const novoObjeto = { atendimento: [] };
+
+              novoArray.forEach((item) => {
+                console.log(item)
+                if(item != undefined){
+                    novoObjeto.atendimento.push(...item.atendimento);
+
+                }
+              });
+
+              //console.log(novoObjeto)
+            
+            
+            setAtendimento(novoObjeto.atendimento)
             const date = new Date();
             var dataAtual =  date.getDate() +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
             setData(dataAtual)
 
             var atendimentos = 0
-            
-            data.map((a) =>{
+            novoObjeto.atendimento.map((a) =>{
                 if(a.data == dataAtual){
                     atendimentos += 1
                 }
@@ -34,6 +73,7 @@ export function Attendance({navigation}){
                 setAtendimentosHoje(0)
             }
         })
+        //off(startCountRef)
     }
 
     function readDataClient(){
@@ -41,6 +81,8 @@ export function Attendance({navigation}){
         const startCountRef = ref(db, 'clientes/')
         onValue(startCountRef, (snap) =>{
             const data = snap.val();
+            console.log(data)
+            
             setClient(data)
 
         })
@@ -58,17 +100,17 @@ export function Attendance({navigation}){
                 {
                     atendimentosHoje >= 1 ?
                     atendimento ? atendimento.map((a) =>(
-                        client ? client.map((c) =>(
-                            a.id_cliente == c.id && a.data == data ? (
-                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: c})}>
-                                    <View style={a.atendimento == 1 ? styles.completed : styles.no_complet}></View>
+                        
+                            a.data == data ? (
+                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: a})}>
+                                    <View style={a.status == 1 ? styles.completed : styles.no_complet}></View>
                                     <View style={{margin: 10}}>
-                                        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{c.nome}</Text> 
-                                        <Text>{c.endereco}</Text>  
+                                        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{a.nome}</Text> 
+                                        <Text>{a.endereco}</Text>  
                                     </View> 
                                 </TouchableOpacity>
                             ): ""
-                        )) : ""
+                        
                     )) : "" 
                     : 
                     <View style={{alignItems: 'center', margin: 10}}>
@@ -81,20 +123,20 @@ export function Attendance({navigation}){
                 </View>
                 {
                     atendimento ? atendimento.map((a) =>(
-                        client ? client.map((c) =>(
-                            a.id_cliente == c.id && a.data != data? (
-                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: c})}>
-                                    <View style={a.atendimento == 1 ? styles.completed : styles.no_complet}></View>
+                        
+                            a.data != data? (
+                                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate("AtendimentoSelect", {atendimento: a, cliente: a})}>
+                                    <View style={a.status == 1 ? styles.completed : styles.no_complet}></View>
                                     <View style={{margin: 10}}>
-                                        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{c.nome}</Text> 
-                                        <Text>{c.endereco}</Text>
+                                        <Text style={{fontSize: 16, fontWeight: 'bold'}}>{a.nome}</Text> 
+                                        <Text>{a.endereco}</Text>
                                                                                                                 
                                                 
                                     </View>
                                     
                                 </TouchableOpacity>
                             ): "" 
-                        )) : ""
+                        
                     )) : ""    
                 }          
             </View>

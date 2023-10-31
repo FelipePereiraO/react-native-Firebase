@@ -6,14 +6,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 export function AttendanceSelect({navigation, route}){
     const [client, setClient] = useState(route.params)
-    console.log(route.params)
+    const [status, setStatus] = useState(route.params.atendimento.status)
 
-
-    function UpdateAtendimento(id){
-
-        update(ref(db, 'atendimento/'+id),{
-            atendimento: 1
+    function UpdateAtendimento(atendimento, type){
+        update(ref(db, 'atendimentos/0/'+atendimento.id+'/0/atendimento/0/'+atendimento.idAtendimento),{
+            status: type
         }).then(() =>{
+            setStatus(1)
             alert("Update")
         }).catch((error) =>{
             alert(error)
@@ -23,26 +22,26 @@ export function AttendanceSelect({navigation, route}){
 
     function Maps(){
         const url = Platform.select({
-            ios: `maps:0,0?q=${client.cliente.endereco}`,
-            android: `geo:0,0?q=${client.cliente.endereco}`,
+            ios: `maps:0,0?q=${client.atendimento.endereco}`,
+            android: `geo:0,0?q=${client.atendimento.endereco}`,
           })
           
           Linking.openURL(url)
     }
 
     function Tel(){
-       Linking.openURL("tel:"+client.cliente.telefone)
+       Linking.openURL("tel:"+client.atendimento.telefone)
     }
     return(
         <View style={styles.container}>
 
         <View style={[styles.card, styles.shadowProp]}>
-            <View style={{backgroundColor: client.atendimento.atendimento == 1 ? "#2ecc71" : "#e74c3c", height: 25, width: 95, justifyContent: 'center', alignItems: 'center', borderRadius: 8}}>
-                <Text style={{fontWeight: 'bold', color: '#fff'}}>{client.atendimento.atendimento == 1 ? "Atendido" : "Não atendido"}</Text>
+            <View style={{backgroundColor: status == 1 ? "#2ecc71" : "#e74c3c", height: 25, width: 95, justifyContent: 'center', alignItems: 'center', borderRadius: 8}}>
+                <Text style={{fontWeight: 'bold', color: '#fff'}}>{status == 1 ? "Atendido" : "Não atendido"}</Text>
             </View>
             <View style={{margin: 12}}>
-                <Text style={{fontWeight: 'bold', fontSize: 18}}>{client.cliente.nome}</Text>
-                <Text style={{fontSize: 15}}>Endereço: {client.cliente.endereco}</Text>
+                <Text style={{fontWeight: 'bold', fontSize: 18}}>{client.atendimento.nome}</Text>
+                <Text style={{fontSize: 15}}>Endereço: {client.atendimento.endereco}</Text>
                 <Text style={{fontSize: 15}}>Marcado para: {client.atendimento.data} as {client.atendimento.hora}</Text>
             </View>
 
@@ -52,11 +51,11 @@ export function AttendanceSelect({navigation, route}){
                     onPress={() => Linking.canOpenURL("whatsapp://send?text=oi").then(supported => {
                         if (supported) {
                             return Linking.openURL(
-                                "whatsapp://send?phone="+client.cliente.telefone+"&text=Oi"
+                                "whatsapp://send?phone="+client.atendimento.telefone+"&text=Oi"
                             );
                         } else {
                         return Linking.openURL(
-                            "https://api.whatsapp.com/send?phone="+client.cliente.telefone+"1&text=Oi"
+                            "https://api.whatsapp.com/send?phone="+client.atendimento.telefone+"1&text=Oi"
                         );
                         }
                     })
@@ -75,10 +74,11 @@ export function AttendanceSelect({navigation, route}){
                     <Text style={{fontWeight: 'bold', color: 'white'}}>
                         Mapa
                     </Text>
-                </TouchableOpacity>            
+                </TouchableOpacity>   
+                         
             </View>
-
-            <TouchableOpacity
+            <View style={{alignItems: 'center', flexDirection: 'row', justifyContent: 'center'}}>
+                <TouchableOpacity
                     style={styles.buttonTel}
                     onPress={() => Tel()}
                 >
@@ -86,17 +86,19 @@ export function AttendanceSelect({navigation, route}){
                     <Text style={{fontWeight: 'bold', color: 'white'}}>
                         Ligar
                     </Text>
-            </TouchableOpacity>      
+                </TouchableOpacity>   
+            </View>
+   
         </View>
         {
-            client.atendimento.atendimento == 1 ? (
+            status == 1 ? (
                 <></>
             ) : (
                 <>
                     <TouchableOpacity style={styles.buttonCancel}>    
-                        <Text style={{fontWeight: 'bold', color: 'white'}}>Cancelar</Text>
+                        <Text style={{fontWeight: 'bold', color: 'white'}} onPress={() => UpdateAtendimento(client.atendimento, 2)}>Cancelar</Text>
                     </TouchableOpacity>    
-                    <TouchableOpacity style={styles.buttonNext} onPress={() => UpdateAtendimento(client.atendimento.id)}>
+                    <TouchableOpacity style={styles.buttonNext} onPress={() => UpdateAtendimento(client.atendimento, 1)}>
                         <Text style={{fontWeight: 'bold', color: 'white'}}>Cliente Atendido</Text>
                     </TouchableOpacity>                     
                 </>
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
     },
     buttonWP:{
         height: 60,
-        width: 160,
+        width: '45%',
         backgroundColor: "#4cd137",
         borderRadius: 8,
         alignItems: 'center',
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
     },
     buttonMap:{
         height: 60,
-        width: 160,
+        width: '45%',
         backgroundColor: "#487eb0",
         borderRadius: 8,
         alignItems: 'center',
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
     },
     buttonTel:{
         height: 60,
-        width: 325,
+        width: '93%',
         backgroundColor: "#78e08f",
         borderRadius: 8,
         alignItems: 'center',
@@ -169,12 +171,9 @@ const styles = StyleSheet.create({
     },
     card:{
         padding: 20,
-        margin: 20,
-        backgroundColor: '#fff',
-        borderRadius: 25
+
     },
     shadowProp: {
-        elevation: 13,
-        shadowColor: '#52006A',
+
       },
   });

@@ -37,12 +37,34 @@ export function Dashborad({navigation}){
       ];
       
     function readDataAtendimento(){
-        const startCountRef = ref(db, 'atendimento/')
+        const startCountRef = ref(db, 'atendimentos/0')
         onValue(startCountRef, (snap) =>{
             const data = snap.val();
+            //console.log(data)
             setAtendido(0)
             setNaoAtendido(0)
-            data.map((a) => {
+            const novoArray = Object.keys(data).map((chave) => {
+                const arrayDeObjetos = data[chave];
+              
+                return arrayDeObjetos.map((objeto) => {
+                  return {
+                    chave,
+                    nome: objeto.nome,
+                    endereco: objeto.endereco,
+                    atendimento: Object.values(objeto.atendimento).map((atendimento) => {
+                      return Object.values(atendimento).map((atendimentoData) => {
+                        return {
+                          data: atendimentoData.data,
+                          hora: atendimentoData.hora,
+                          servico: atendimentoData.servico,
+                          status: atendimentoData.status,
+                        };
+                      });
+                    }).flat(),
+                  };
+                });
+              }).flat();
+            novoArray.map((a) => {
                 var not = 0
                 var yes = 0
                 var dia1 = 0
@@ -52,72 +74,70 @@ export function Dashborad({navigation}){
                 const date = new Date();
                 var semana = ["Domingo", "Segunda-Feira", "Terça-Feira", "Quarta-Feira", "Quinta-Feira", "Sexta-Feira", "Sábado"];
                 var dataAtual =  date.getDate() +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
-                console.log(dataAtual)
-                if(dataAtual == a.data){
-                    console.log("yes")
-                    if(a.atendimento == 0){
-                        setNaoAtendido(not + 1)
-                    }else{
-                        setAtendido(yes + 1)
-                    }                    
-                }
-                var meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro","outubro", "novembro", "dezembro"]
-
-                var meses31 = ["janeiro", "março",  "maio", "julho", "agosto", "outubro",  "dezembro"]
-                var meses30 = ["abril", "junho", "setembro", "novembro",]
-               /*  if(date.getDate() == 1){
-                    mes = date.getMonth()
-                    var dia = 1
-                    if(mes == 3){
-                        dia = 28
-                    }else{
-                        meses31.map((m) =>{
-                            if(meses[mes] == m){
-                                dia = 31
-                            }else{
-                                dia = 30
-                            }
-                        })                        
+                a.atendimento.map((atend) =>{
+                    if(dataAtual == atend.data){
+                        console.log("yes")
+                        if(atend.status == 0){
+                            setNaoAtendido(not + 1)
+                        }else{
+                            setAtendido(yes + 1)
+                        }                    
                     }
-                } */
-                //Um dia antes
-                var dataAtual1Antes =  (date.getDate() - 1) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
-                var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 1)+"/"+date.getFullYear())
-                setDiaAtendimento1(semana[dia.getDay()])
-                if(dataAtual1Antes == a.data){
-                    if(a.atendimento == 1){
-                        setAtendimento1Antes(dia1 + 1)
+                    var meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro","outubro", "novembro", "dezembro"]
+                    var meses31 = ["janeiro", "março",  "maio", "julho", "agosto", "outubro",  "dezembro"]
+                    var meses30 = ["abril", "junho", "setembro", "novembro",]
+                /*  if(date.getDate() == 1){
+                        mes = date.getMonth()
+                        var dia = 1
+                        if(mes == 3){
+                            dia = 28
+                        }else{
+                            meses31.map((m) =>{
+                                if(meses[mes] == m){
+                                    dia = 31
+                                }else{
+                                    dia = 30
+                                }
+                            })                        
+                        }
+                    } */
+                    //Um dia antes
+                    var dataAtual1Antes =  (date.getDate() - 1) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
+                    var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 1)+"/"+date.getFullYear())
+                    setDiaAtendimento1(semana[dia.getDay()])
+                    if(dataAtual1Antes == atend.data){
+                        if(atend.status == 1){
+                            setAtendimento1Antes(dia1 + 1)
+                        }
                     }
-                }
-                //Dois dias antes
-                var dataAtual2Antes =  (date.getDate() - 2) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
-                var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 2)+"/"+date.getFullYear())
-                setDiaAtendimento2(semana[dia.getDay()])
-                if(dataAtual2Antes == a.data){
-                    if(a.atendimento == 1){
-                        setAtendimento2Antes(dia2 + 1)
+                    //Dois dias antes
+                    var dataAtual2Antes =  (date.getDate() - 2) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
+                    var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 2)+"/"+date.getFullYear())
+                    setDiaAtendimento2(semana[dia.getDay()])
+                    if(dataAtual2Antes == atend.data){
+                        if(a.atendimento == 1){
+                            setAtendimento2Antes(dia2 + 1)
+                        }
                     }
-                }
-                //Tres dias antes
-                var dataAtual3Antes =  (date.getDate() - 3) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
-                var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 3)+"/"+date.getFullYear())
-                setDiaAtendimento3(semana[dia.getDay()])
-                if(dataAtual3Antes == a.data){
-                    if(a.atendimento == 1){
-                        setAtendimento3Antes(dia3 + 1)
+                    //Tres dias antes
+                    var dataAtual3Antes =  (date.getDate() - 3) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
+                    var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 3)+"/"+date.getFullYear())
+                    setDiaAtendimento3(semana[dia.getDay()])
+                    if(dataAtual3Antes == atend.data){
+                        if(atend.status == 1){
+                            setAtendimento3Antes(dia3 + 1)
+                        }
                     }
-                }
-
-                //Quatro dias antes
-                var dataAtual4Antes =  (date.getDate() - 4) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
-                var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 4)+"/"+date.getFullYear())
-                setDiaAtendimento4(semana[dia.getDay()])
-                if(dataAtual4Antes == a.data){
-                    if(a.atendimento == 1){
-                        setAtendimento4Antes(dia4 + 1)
+                    //Quatro dias antes
+                    var dataAtual4Antes =  (date.getDate() - 4) +"/"+(date.getMonth() + 1)+"/"+date.getFullYear()
+                    var dia = new Date((date.getMonth() + 1)+"/"+(date.getDate() - 4)+"/"+date.getFullYear())
+                    setDiaAtendimento4(semana[dia.getDay()])
+                    if(dataAtual4Antes == atend.data){
+                        if(atend.status == 1){
+                            setAtendimento4Antes(dia4 + 1)
+                        }
                     }
-                }
-
+                })
             })
 
         })

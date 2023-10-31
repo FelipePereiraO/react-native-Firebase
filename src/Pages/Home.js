@@ -30,7 +30,7 @@ export function Home({navigation, route}){
                     <Ionicons name="list" size={32} color="black"/>
                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Lista de Vendas</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button_list}>
+                <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Nova Venda")}>
                     <Ionicons name="person-add-sharp" size={32} color="black"/>
                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Nova Venda</Text>
                 </TouchableOpacity>
