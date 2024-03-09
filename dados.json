@@ -11,13 +11,20 @@
                             "2321321":{
                                 "data": "13/10/2023",
                                 "hora": "15:00",
-                                "servico": "Entrega",
+                                "descricao": "Entrega",
+                                "valor": 10.40,
+                                "tipo_pagamento": 1,
+                                "tempo_garantia": "12 meses",
+                                "servico": "nd",
                                 "status": 1
                             },
                             "23213216":{
                                 "data": "11/10/2023",
                                 "hora": "15:00",
                                 "servico": "Entrega",
+                                "valor": 10.40,
+                                "tipo_pagamento": 1,
+                                "tempo_garantia": "12 meses",
                                 "status": 1
                             }
                         }
@@ -35,6 +42,9 @@
                                 "data": "10/10/2023",
                                 "hora": "15:00",
                                 "servico": "Concerto",
+                                "valor": 10.40,
+                                "tipo_pagamento": 1,
+                                "tempo_garantia": "12 meses",
                                 "status": 2
                             }
                         }

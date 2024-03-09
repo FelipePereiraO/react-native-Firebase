@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Switch, ScrollView, FlatList, Alert } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Switch, ScrollView, FlatList, Alert, Platform } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import DateTimePicker from "@react-native-community/datetimepicker"
 import {db} from "../services/Firebase"
@@ -47,8 +47,12 @@ export function NewAttendance({navigation}){
                         "PrimaryAttedance":{
                             "data": dateAttendance,
                             "hora": hours,
-                            "servico": description,
-                            "status": 0 
+                            "descricao": description,
+                            "status": 0,
+                            "servico": "",
+                            "tempo_garantia": 0,
+                            "tipo_pagamento": 0,
+                            "valor": "0,00"
                         }
                     }
                 ]    
@@ -73,8 +77,12 @@ export function NewAttendance({navigation}){
         {
             "data": dateAttendance,
             "hora": hours,
-            "servico": description,
-            "status": 0 
+            "descricao": description,
+            "status": 0,
+            "servico": "",
+            "tempo_garantia": 0,
+            "tipo_pagamento": 0,
+            "valor": "0,00"
         }
         ).then(() =>{
             Alert.alert("Alerta!","Novo atendimento criado com sucesso.", [{ 
@@ -111,10 +119,10 @@ export function NewAttendance({navigation}){
 
     const onChangeDate = (event, selectedDate) =>{
         const currentDate = selectedDate || date;
-        const platform = Platform.select({
-            ios: 'ios',
-            android: 'android'
-        })
+        // const platform = Platform.select({
+        //     ios: 'ios',
+        //     android: 'android'
+        // })
         setDate(currentDate)
 
         let tempDate = new Date(currentDate)
@@ -198,7 +206,7 @@ export function NewAttendance({navigation}){
                     <View style={{height: 3, width: 80, backgroundColor: service ? '#2ecc71' : '#bdc3c7', margin: 15}}></View>
                     <Ionicons name="build" size={30} color={service ? '#2ecc71' : '#bdc3c7'}/>
                 </View>
-                <View style={styles.inputs}>
+                <ScrollView style={styles.inputs}>
                 {
                     cliente && (
                         <View style={{margin: 12}}>
@@ -240,19 +248,15 @@ export function NewAttendance({navigation}){
                                     <View>
                                         <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Nome do Cliente</Text>
                                         <View style={styles.backgorundInput}>
+                                            <Ionicons name="search-outline" size={20} color='#bdc3c7'/>
                                             <TextInput style={{marginHorizontal: 8, width: '100%', height: 50}} placeholder='Nome' id='nome' value={nomeExiste} onChangeText={value => onHandleClient(value)}/>                              
                                         </View>
                                             <FlatList
                                                 data={filter}
                                                 renderItem={({item}) => <Item item={item} />}
                                                 scrollEnabled={false}
-
                                                 keyExtractor={item => item.id}
                                             />
-                                      
-
-                                    
-
                                     </View>
                             } 
                         </View>
@@ -260,31 +264,64 @@ export function NewAttendance({navigation}){
                 }
                 {
                     calendar && (
-                        <View style={{margin: 12}}>
-                            <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Data do atendimento</Text>
-                            <TouchableOpacity style={styles.backgorundInput} onPress={() => showDateDialog('date')}>
-                                <Ionicons name="calendar" size={20} color='#bdc3c7'/>
-                                <Text style={{marginHorizontal: 8, width: '100%', height: 50, padding: 15}}>{dateAttendance}</Text>
-                            </TouchableOpacity> 
+                        
+                            Platform.OS == 'ios' ? (
+                                <View style={{margin: 12}}>
+                                    <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Data do atendimento</Text>
+                                    <TouchableOpacity style={styles.backgorundInput} onPress={() => showDateDialog('date')}>
+                                        <Ionicons name="calendar" size={20} color='#bdc3c7'/>
+                                        <DateTimePicker
+                                                testeID="dateTimePicker"
+                                                value={date}
+                                                mode={'date'}
+                                                is24Hour={true}
+                                                display='default'
+                                                onChange={onChangeDate}
+                                            />
+                                    </TouchableOpacity> 
+        
+                                    <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Hora do atendimento</Text>
+                                    <TouchableOpacity style={styles.backgorundInput} onPress={() => showDateDialog('time')}>
+                                        <Ionicons name="alarm" size={20} color='#bdc3c7'/>
+                                        <DateTimePicker
+                                                testeID="dateTimePicker"
+                                                value={date}
+                                                mode={'time'}
+                                                is24Hour={true}
+                                                display='default'
+                                                onChange={onChangeDate}
+                                            />
+                                    </TouchableOpacity>  
+                                </View>
+                            ) : (
+                                <View style={{margin: 12}}>
+                                    <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Data do atendimento</Text>
+                                    <TouchableOpacity style={styles.backgorundInput} onPress={() => showDateDialog('date')}>
+                                        <Ionicons name="calendar" size={20} color='#bdc3c7'/>
+                                        <Text style={{marginHorizontal: 8, width: '100%', height: 50, padding: 15}}>{dateAttendance}</Text>
+                                    </TouchableOpacity> 
+        
+                                    <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Hora do atendimento</Text>
+                                    <TouchableOpacity style={styles.backgorundInput} onPress={() => showDateDialog('time')}>
+                                        <Ionicons name="alarm" size={20} color='#bdc3c7'/>
+                                        <Text style={{marginHorizontal: 8, width: '100%', height: 50, padding: 15}}>{hours}</Text>
+                                    </TouchableOpacity>  
+                                    {
+                                        showDate && (
+                                            <DateTimePicker
+                                                testeID="dateTimePicker"
+                                                value={date}
+                                                mode={mode}
+                                                is24Hour={true}
+                                                display='default'
+                                                onChange={onChangeDate}
+                                            />
+                                        )
+                                    }  
+                                </View>
+                            )
+                        
 
-                            <Text style={{margin: 8, fontWeight: 'bold', color: "#6c5ce7"}}>Hora do atendimento</Text>
-                            <TouchableOpacity style={styles.backgorundInput} onPress={() => showDateDialog('time')}>
-                                <Ionicons name="alarm" size={20} color='#bdc3c7'/>
-                                <Text style={{marginHorizontal: 8, width: '100%', height: 50, padding: 15}}>{hours}</Text>
-                            </TouchableOpacity>  
-                            {
-                                showDate && (
-                                    <DateTimePicker
-                                        testeID="dateTimePicker"
-                                        value={date}
-                                        mode={mode}
-                                        is24Hour={true}
-                                        display='default'
-                                        onChange={onChangeDate}
-                                    />
-                                )
-                            }  
-                        </View>
                     )
                 }
                 {
@@ -299,7 +336,7 @@ export function NewAttendance({navigation}){
                 }
                 
 
-                </View>
+                </ScrollView>
                 <TouchableOpacity style={styles.button} onPress={() => Etapas()}>
                     <Text style={{color: 'white', fontWeight: 'bold'}}>Continuar</Text>
                 </TouchableOpacity>
@@ -322,19 +359,17 @@ const styles = StyleSheet.create({
     },
     backgorundInput:{
         borderColor: '#dcdde1',
-        borderWidth: 1,
         backgroundColor: '#f5f6fa',
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: 8,
-        height: 50,
+        height: 40,
         width: '100%',
         padding: 10
     
     },
     backgorundInputArea:{
         borderColor: '#dcdde1',
-        borderWidth: 1,
         backgroundColor: '#f5f6fa',
         flexDirection: 'row',
         alignItems: 'center',
@@ -352,6 +387,7 @@ const styles = StyleSheet.create({
         height: 40,
         width: 150,
         margin: 10,
+        marginBottom: 25,
         backgroundColor: "#6c5ce7",
         borderRadius: 8,
         alignItems: 'center',

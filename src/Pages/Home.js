@@ -20,12 +20,12 @@ export function Home({navigation, route}){
         <ScrollView style={styles.container}>
             {/* <Text>Welcome {user._tokenResponse.email}</Text> */}
             <View style={{margin: 16, marginTop: 50}}>
-                <Text style={{fontSize: 22, fontWeight: 'bold', color: "#6c5ce7"}}>Bem vindo, Felipe!</Text>
+                <Text style={{fontSize: 22, fontWeight: 'bold', color: "#6c5ce7"}}>Bem vindo, Paulo Junior!</Text>
             </View>
             <View>
                 
             </View>
-            <View style={{margin: 10, flexDirection: 'row', justifyContent: 'center'}}>
+            {/* <View style={{margin: 10, flexDirection: 'row', justifyContent: 'center'}}>
                 <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Venda")}>
                     <Ionicons name="list" size={32} color="black"/>
                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Lista de Vendas</Text>
@@ -34,11 +34,11 @@ export function Home({navigation, route}){
                     <Ionicons name="person-add-sharp" size={32} color="black"/>
                     <Text style={{fontSize: 14, fontWeight: 'bold'}}>Nova Venda</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
             <View style={{margin: 10, flexDirection: 'row', justifyContent: 'center'}}>
-                <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Atendimento")}>
-                    <Ionicons name="list" size={32} color="black"/>
-                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Lista de atendimento</Text>
+                <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Atendimentos")}>
+                    <Ionicons name="calendar-sharp" size={32} color="black"/>
+                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Atendimentos</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Novo Atendimento")}>
                     <Ionicons name="create" size={32} color="black"/>
@@ -46,9 +46,9 @@ export function Home({navigation, route}){
                 </TouchableOpacity>
             </View>
             <View style={{margin: 10, flexDirection: 'row', justifyContent: 'center'}}>
-                <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Client")}>
-                    <Ionicons name="list" size={32} color="black"/>
-                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Lista de clientes</Text>
+                <TouchableOpacity style={styles.button_list} onPress={() => navigation.navigate("Clientes")}>
+                    <Ionicons name="people-sharp" size={32} color="black"/>
+                    <Text style={{fontSize: 14, fontWeight: 'bold'}}>Clientes</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button_list}>
                     <Ionicons name="person-add-sharp" size={32} color="black"/>

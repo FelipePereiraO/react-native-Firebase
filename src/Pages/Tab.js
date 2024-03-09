@@ -18,7 +18,7 @@ export function Tab({navigation, route}){
                           if (route.name === 'Dashborad') {
                             iconName = 'pie-chart';
                           } else if (route.name === 'Home') {
-                            iconName = 'ios-list-circle-sharp';
+                            iconName = 'home';
                           } else if(route.name === 'Profile'){
                             iconName = 'person-circle'
                           }
@@ -32,7 +32,7 @@ export function Tab({navigation, route}){
             >
                 <Tabb.Screen name="Dashborad" component={Dashborad} options={{headerShown: false}}/>
                 <Tabb.Screen name="Home" component={Home} options={{headerShown: false}}/>
-                <Tabb.Screen name="Profile" component={Profile} options={{headerShown: false}}/>
+                {/* <Tabb.Screen name="Profile" component={Profile} options={{headerShown: false}}/> */}
                 
             </Tabb.Navigator>
     )
